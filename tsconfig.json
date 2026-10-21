@@ -8,12 +8,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "baseUrl": ".",
-    "paths": {
-      "@pages/*": ["pages/*"],
-      "@fixtures/*": ["fixtures/*"],
-      "@utils/*": ["utils/*"]
-    }
+    "types": ["node"]
   },
   "exclude": ["node_modules"]
 }
