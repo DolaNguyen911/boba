@@ -36,6 +36,11 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
     {
+      name: 'mobile-chrome',
+      testDir: './tests/ui',
+      use: { ...devices['Pixel 7'] },
+    },
+    {
       name: 'api',
       testDir: './tests/api',
       use: { baseURL: process.env.API_URL || 'https://api.demoblaze.com' },

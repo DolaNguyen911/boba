@@ -1,14 +1,8 @@
 import { Page, Dialog } from '@playwright/test';
 
-/**
- * demoblaze reports every login/cart/order error via a native alert() and gives
- * no DOM signal when an action succeeds instead, so callers can't just wait for
- * a selector. Some alerts (empty-field checks) fire synchronously inside the
- * click, which would block `action()` from ever resolving unless the dialog is
- * accepted from within the event handler itself rather than after awaiting it.
- * Others (wrong password, server-side checks) only show up after an async ajax
- * call, so we still need to wait up to `timeout` for those.
- */
+// demoblaze reports errors via native alert() and nothing on success. Some alerts
+// fire synchronously inside the click (would deadlock if we awaited the click first),
+// others only after an async ajax call - the handler below covers both.
 export async function captureDialog(
   page: Page,
   action: () => Promise<void>,

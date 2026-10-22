@@ -22,9 +22,8 @@ export const test = base.extend<Fixtures>({
   cartPage: async ({ page }, use) => {
     await use(new CartPage(page));
   },
-  // demoblaze ships no fixed demo account, so provision a unique one per test via its API.
-  // The UI base64-encodes the password before it ever reaches that API, so the signup
-  // call here has to send the same encoding or a later UI login won't match.
+  // No fixed demo account exists, so provision a fresh one per test. Password must be
+  // base64-encoded the same way the UI does it, or a later UI login won't match.
   testUser: async ({ request }, use) => {
     const username = `qa_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     const password = 'Test1234!';
