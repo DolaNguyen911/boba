@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "Items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "cat": { "type": "string" },
+          "desc": { "type": "string" },
+          "id": { "type": "integer" },
+          "img": { "type": "string" },
+          "price": { "type": "number" },
+          "title": { "type": "string" }
+        },
+        "required": ["cat", "id", "price", "title"]
+      }
+    },
+    "LastEvaluatedKey": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" }
+      },
+      "required": ["id"]
+    }
+  },
+  "required": ["Items", "LastEvaluatedKey"]
+}

@@ -1,52 +1,62 @@
-# boba
+# boba - Playwright Automation Framework
 
-E2E automation for the Login and Cart flows on [demoblaze.com](https://www.demoblaze.com/), built with Playwright + TypeScript.
+## Overview
+**boba** is a scalable end-to-end automation framework developed for the DemoBlaze web application. Built with **Playwright** and **TypeScript**, this framework showcases a professional approach to hybrid testing, covering both UI and API layers with a focus on maintainability and clear execution reporting.
 
-## Layout
+**Test Case Suite:** [Google Sheet / Drive link](<add-link-here>)
 
-```
-src/
-  login/   LoginPage.ts + login.spec.ts
-  cart/    CartPage.ts, ProductPage.ts + cart.spec.ts
-  shared/  fixtures.ts, dialog.ts
-api/       auth.spec.ts, products.spec.ts
-test-cases/test-cases.xlsx
-```
+## Project Structure
+The framework follows a modular folder hierarchy to ensure a clean separation of concerns:
 
-Grouped by feature instead of splitting into generic `pages/`/`tests/` folders - the page object and the spec that drives it sit next to each other, so working on Cart means one folder, not three. `api/` is separate since it never touches a browser.
-
-## Why it's structured this way
-
-- **Page object next to its spec** - `src/login/LoginPage.ts` and `src/login/login.spec.ts` live together; a selector change and the test that exercises it are one folder away from each other instead of two parallel trees.
-- **`src/shared/fixtures.ts`** - hands tests a ready `loginPage`/`productPage`/`cartPage`, plus a `testUser` fixture that registers a fresh account through the API before the test runs. demoblaze has no fixed demo account, so provisioning one per test avoids collisions or manual setup.
-- **`src/shared/dialog.ts`** - demoblaze reports every error (login, add-to-cart, place order) through a native `alert()`, and some fire synchronously inside the click itself. This helper captures the alert text correctly in both the sync and async case, instead of a blind `sleep`.
-- **Multi-project config** - `chromium`/`firefox`/`webkit` cover cross-browser UI, `mobile-chrome` emulates a Pixel 7 viewport, and a separate `api` project hits `api.demoblaze.com` directly for faster, UI-independent checks.
-
-## What's covered
-
-- `src/login/login.spec.ts` - valid login, wrong password, unregistered user, empty fields, session surviving a reload.
-- `src/cart/cart.spec.ts` - login → add to cart → place an order (the main demo flow), guest add-to-cart, missing Name/Card validation, deleting an item.
-- `api/auth.spec.ts` - signup/login contract checks directly against the API (duplicate user, wrong password, unknown user).
-- `api/products.spec.ts` - sanity check on the product catalog response shape.
-- `test-cases/test-cases.xlsx` - the full manual test case suite for Login and Cart (functional/negative/edge), including a few documented gaps in demoblaze itself (e.g. Credit card and Month/Year accept anything) that aren't automated since they describe a known gap rather than a pass/fail check.
-
-## Running it
-
-```bash
-npm install
-npx playwright install        # first time only, downloads browser binaries
-cp .env.example .env           # defaults already point at the public demoblaze site
-
-npm test                       # all UI tests, chromium + firefox + webkit
-npm run test:ui                # UI tests on chromium only (fastest for local iteration)
-npm run test:api               # API-only checks, no browser
-npm run test:mobile            # UI tests on a Pixel 7 viewport
-npm run test:smoke             # just the two @smoke tests (login, full cart→checkout flow)
-npm run report                 # open the last HTML report
+```text
+boba/
+├── .github/workflows/   # CI/CD pipeline configurations
+├── config/              # Environment and global settings
+├── pages/               # Page Object Model (POM) implementations
+│   └── modules/         # Reusable UI components (Navigation Bar,...)
+├── tests/               # Test suites
+│   ├── api/             # Functional API tests
+│   └── ui/              # End-to-end UI tests
+├── utils/               # Common utility and helper functions
+├── .gitignore           # Git exclusion rules
+├── package.json         # Project dependencies and scripts
+└── playwright.config.ts # Global Playwright configuration
 ```
 
-Tests run against the public demoblaze.com site, so no local server is required. `BASE_URL`/`API_URL` in `.env` can be pointed at a different environment if needed.
+## Key Features
+* **Hybrid Testing Strategy:** Unified automation for UI and API validation within a single repository.
+* **Modular Page Objects:** Component-based architecture using modules for highly reusable UI elements.
+* **Data-Driven Testing:** Support for multiple test scenarios by decoupling test data from execution logic.
+* **Cross-Platform Emulation:** Built-in configuration for testing across desktop browsers and mobile viewports.
+* **Automated CI/CD:** Ready-to-use GitHub Actions for continuous integration and automated test execution.
 
-## CI
+## Getting Started
 
-`.github/workflows/playwright.yml` runs the full suite on every push/PR to `main` and uploads the HTML report as a build artifact.
+### Prerequisites
+* **Node.js** (v18 or higher)
+* **npm**
+
+### Installation
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+2.  **Install Playwright browsers:**
+    ```bash
+    npx playwright install
+    ```
+
+### Execution
+* **Run all tests:** `npm run test`
+* **Run UI tests:** `npm run test:ui`
+* **Run API tests:** `npm run test:api`
+* **Mobile Chrome:** `npm run test:mobile`
+* **Smoke tests:** `npm run test:smoketest`
+
+## Reporting
+The framework generates detailed execution reports to facilitate debugging and quality assessment:
+* **HTML Report:** `npx playwright show-report`
+
+## Future Roadmap
+* **Performance:** Integrate load testing using k6 or Playwright timing.
+* **Mobile:** Expand to native app testing via Appium integration.
