@@ -20,9 +20,7 @@ jobs:
 
       - run: npx playwright install --with-deps
 
-      - run: npm test
-
-      - run: npm run test:api
+      - run: npx playwright test --project=chromium --project=firefox --project=webkit --project=api
 
       - uses: actions/upload-artifact@v4
         if: always()

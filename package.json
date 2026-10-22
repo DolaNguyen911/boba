@@ -1,7 +1,7 @@
 {
   "name": "boba",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "playwright test --project=chromium --project=firefox --project=webkit",
     "test:ui": "playwright test --project=chromium",
