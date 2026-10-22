@@ -1,4 +1,4 @@
-# demoblaze-test-automation
+# boba
 
 E2E automation for the Login and Cart flows on [demoblaze.com](https://www.demoblaze.com/), built with Playwright + TypeScript.
 

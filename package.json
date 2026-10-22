@@ -1,5 +1,5 @@
 {
-  "name": "demoblaze-test-automation",
+  "name": "boba",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "E2E automation for demoblaze.com - Playwright + TypeScript",
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
