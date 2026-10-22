@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures';
+import { test, expect } from '../shared/fixtures';
 
 const PRODUCT_NAME = 'Samsung galaxy s6';
 

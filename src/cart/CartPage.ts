@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { captureDialog } from '../utils/dialog';
+import { captureDialog } from '../shared/dialog';
 
 export interface OrderDetails {
   name: string;

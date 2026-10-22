@@ -1,7 +1,7 @@
 import { test as base, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { ProductPage } from '../pages/ProductPage';
-import { CartPage } from '../pages/CartPage';
+import { LoginPage } from '../login/LoginPage';
+import { ProductPage } from '../cart/ProductPage';
+import { CartPage } from '../cart/CartPage';
 
 type TestUser = { username: string; password: string };
 

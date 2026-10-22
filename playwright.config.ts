@@ -4,7 +4,6 @@ import 'dotenv/config';
 const baseURL = process.env.BASE_URL || 'https://www.demoblaze.com';
 
 export default defineConfig({
-  testDir: './tests',
   timeout: 30_000,
   expect: { timeout: 5_000 },
   fullyParallel: true,
@@ -22,27 +21,27 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testDir: './tests/ui',
+      testDir: './src',
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      testDir: './tests/ui',
+      testDir: './src',
       use: { ...devices['Desktop Firefox'] },
     },
     {
       name: 'webkit',
-      testDir: './tests/ui',
+      testDir: './src',
       use: { ...devices['Desktop Safari'] },
     },
     {
       name: 'mobile-chrome',
-      testDir: './tests/ui',
+      testDir: './src',
       use: { ...devices['Pixel 7'] },
     },
     {
       name: 'api',
-      testDir: './tests/api',
+      testDir: './api',
       use: { baseURL: process.env.API_URL || 'https://api.demoblaze.com' },
     },
   ],
