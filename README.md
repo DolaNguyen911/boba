@@ -3,7 +3,7 @@
 ## Overview
 **boba** is a scalable end-to-end automation framework developed for the DemoBlaze web application. Built with **Playwright** and **TypeScript**, this framework showcases a professional approach to hybrid testing, covering both UI and API layers with a focus on maintainability and clear execution reporting.
 
-**Test Case Suite:** [Google Sheet / Drive link](<add-link-here>)
+**Test Case Suite:** [test-cases/test-cases.xlsx](test-cases/test-cases.xlsx)
 
 ## Project Structure
 The framework follows a modular folder hierarchy to ensure a clean separation of concerns:
