@@ -8,7 +8,8 @@
     "test:ui": "playwright test tests/ui",
     "test:mobile": "playwright test --project=\"Mobile Chrome\"",
     "test:api": "playwright test tests/api",
-    "test:smoketest": "playwright test --grep @smoke"
+    "test:smoketest": "playwright test --grep @smoke",
+    "report": "playwright show-report"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,8 @@
   "devDependencies": {
     "@playwright/test": "^1.58.1",
     "@types/node": "^25.2.0",
-    "ajv": "^8.17.1"
+    "ajv": "^8.17.1",
+    "dotenv": "^18.0.8",
+    "typescript": "^7.0.2"
   }
 }
