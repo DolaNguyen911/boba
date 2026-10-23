@@ -5,19 +5,17 @@ import getAllProductsResponseSchema from './testData/schemas/getAllProductsRespo
 test.describe('API Tests', () => {
     const baseUrl = process.env.API_URL || 'https://api.demoblaze.com';
 
-    test('GET /entries - should return list of products successfully', {tag: ['@smoke']}, async ({ request }) => {
-        // API Action: Send GET request to /entries
+    test('[TC_API_01] GET /entries - should return list of products successfully', {tag: ['@smoke']}, async ({ request }) => {
         const response = await request.get(`${baseUrl}/entries`);
-
-        // Verification: Check status code
         expect(response.ok()).toBeTruthy();
         expect(response.status()).toBe(200);
 
-        // Verification: Validate response body
         const responseBody = await response.json();
         expect(responseBody.Items.length).toBeGreaterThan(0);
 
-        // Verification: Validate JSON Schema
+        const knownProduct = responseBody.Items.find((item: { id: number }) => item.id === 1);
+        expect(knownProduct).toMatchObject({ title: 'Samsung galaxy s6', price: 360, cat: 'phone' });
+
         const ajv = new Ajv();
         const validate = ajv.compile(getAllProductsResponseSchema);
         const valid = validate(responseBody);

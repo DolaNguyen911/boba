@@ -1,89 +1,90 @@
-import {Page, Locator} from '@playwright/test';
-import { BasePage } from './base.page';
-import { format } from '../utils/stringUtils';
+import { Page, Locator } from '@playwright/test';
 
-export class CartPage extends BasePage {
-    static readonly PRODUCT_INFORMATION = '//tbody/tr[%s]/td[count(//thead//th[.="%s"]//preceding-sibling::th) + 1]'
+const COLUMN_INDEX: Record<string, number> = {
+    Title: 1,
+    Price: 2,
+};
 
-    //Admin Search elements
-    productTable: Locator = this.page.locator('//table');
-    placeOrderButton: Locator = this.page.locator('//button[.="Place Order"]');
-    productList: Locator = this.page.locator('//tbody/tr');
+export class CartPage {
+    readonly page: Page;
+
+    productTable: Locator;
+    placeOrderButton: Locator;
+    productList: Locator;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
+        this.productTable = page.locator('table');
+        this.productList = page.locator('tbody tr');
+        this.placeOrderButton = page.getByRole('button', { name: 'Place Order' });
     }
 
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.productTable);
+    cellLocator(index: number, columnName: string): Locator {
+        return this.productList.nth(index).locator('td').nth(COLUMN_INDEX[columnName]);
     }
 
-    /**
-     * Get text content of a specific table cell.
-     * @param index - The zero-based row index.
-     * @param columnName - The header name of the column.
-     * @returns The text of the target cell.
-     */
-    async getProductInfoOnRowByIndexAndColumn(index: number, columnName: string): Promise<string> {
-        return await this.page.locator(format(CartPage.PRODUCT_INFORMATION, index + 1, columnName)).innerText();
-    }
-
-    /**
-     * Cart row order is not guaranteed to match insertion order and can shift between
-     * reads, so rows are targeted by product title rather than by index.
-     */
+    // row order isn't stable, so match by title instead of index
     getRowByTitle(title: string): Locator {
         return this.productList.filter({ hasText: title });
     }
 
     async deleteProductByTitle(title: string): Promise<void> {
-        await this.getRowByTitle(title).locator('a', { hasText: 'Delete' }).click();
+        await this.getRowByTitle(title).getByRole('link', { name: 'Delete' }).click();
     }
 }
 
-export class PlaceOrderModal extends BasePage {
-    static readonly ORDER_INFORMATION_INPUT = 'input[id="%s"]'
+export class PlaceOrderModal {
+    readonly page: Page;
 
-    //Modal elements
-    modalTitle: Locator = this.page.locator('//h5[.="Place order"]');
-    purchaseButton: Locator = this.page.locator('//button[.="Purchase"]');
+    modalTitle: Locator;
+    purchaseButton: Locator;
+    nameInput: Locator;
+    countryInput: Locator;
+    cityInput: Locator;
+    cardInput: Locator;
+    monthInput: Locator;
+    yearInput: Locator;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
+        const modal = page.locator('#orderModal');
+        this.modalTitle = modal.getByRole('heading', { name: 'Place order' });
+        this.purchaseButton = modal.getByRole('button', { name: 'Purchase' });
+        this.nameInput = page.locator('#name');
+        this.countryInput = page.locator('#country');
+        this.cityInput = page.locator('#city');
+        this.cardInput = page.locator('#card');
+        this.monthInput = page.locator('#month');
+        this.yearInput = page.locator('#year');
     }
 
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.modalTitle);
-    }
-    
     async fillOrderInfoAndPurchase(
-        name: string, 
-        country: string, 
-        city: string, 
-        creditCard: string, 
-        month: string, 
+        name: string,
+        country: string,
+        city: string,
+        creditCard: string,
+        month: string,
         year: string
     ): Promise<void> {
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "name")).fill(name);
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "country")).fill(country);
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "city")).fill(city);
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "card")).fill(creditCard);
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "month")).fill(month);
-        await this.page.locator(format(PlaceOrderModal.ORDER_INFORMATION_INPUT, "year")).fill(year);
+        await this.nameInput.fill(name);
+        await this.countryInput.fill(country);
+        await this.cityInput.fill(city);
+        await this.cardInput.fill(creditCard);
+        await this.monthInput.fill(month);
+        await this.yearInput.fill(year);
         await this.purchaseButton.click();
     }
 }
 
-export class PurchaseSuccessfulModal extends BasePage {
-    //Modal elements
-    modalTitle: Locator = this.page.locator('//h2[.="Thank you for your purchase!"]');
-    okButton: Locator = this.page.locator('//button[.="OK"]');
+export class PurchaseSuccessfulModal {
+    readonly page: Page;
+
+    modalTitle: Locator;
+    okButton: Locator;
 
     constructor(page: Page) {
-        super(page);
-    }
-
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.modalTitle);
+        this.page = page;
+        this.modalTitle = page.getByRole('heading', { name: 'Thank you for your purchase!' });
+        this.okButton = page.getByRole('button', { name: 'OK' });
     }
 }

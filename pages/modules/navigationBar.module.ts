@@ -1,19 +1,24 @@
 import { Locator, Page } from "@playwright/test";
-import { BasePage } from "../base.page";
 
-export class NavigationBarModule extends BasePage {
-    // Common navigation bar elements
-    navigationMenuItems: Locator = this.page.locator('a[class*="nav-link"]');
+export class NavigationBarModule {
+    readonly page: Page;
+    private readonly nav: Locator;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
+        // nav id differs per page, but there's always exactly one <nav>
+        this.nav = page.locator('nav');
     }
 
-    async selectMenuItem(menuItem: string): Promise<void>{
-        await this.navigationMenuItems.filter({hasText: menuItem}).click();
+    private menuItem(name: string): Locator {
+        return this.nav.getByRole('link', { name });
     }
 
-    async isMenuItemDisplayed(menuItem: string): Promise<boolean>{
-        return await this.isElementDisplayed(this.navigationMenuItems.filter({hasText: menuItem}));
+    async selectMenuItem(menuItem: string): Promise<void> {
+        await this.menuItem(menuItem).click();
+    }
+
+    menuItemLocator(menuItem: string): Locator {
+        return this.menuItem(menuItem);
     }
 }

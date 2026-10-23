@@ -1,22 +1,24 @@
 import { Locator, Page } from "@playwright/test";
-import { BasePage } from "./base.page";
 
-export class LoginModal extends BasePage {
-    //Login elements
-    loginHeader: Locator = this.page.locator('//h5[.="Log in"]');
-    loginButton: Locator = this.page.locator('//button[.="Log in"]');
-    usernameInput: Locator = this.page.locator('#loginusername');
-    passwordInput: Locator = this.page.locator('#loginpassword');
+export class LoginModal {
+    readonly page: Page;
+
+    loginHeader: Locator;
+    loginButton: Locator;
+    usernameInput: Locator;
+    passwordInput: Locator;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
+        const modal = page.locator('#logInModal');
+        this.loginHeader = modal.getByRole('heading', { name: 'Log in' });
+        this.loginButton = modal.getByRole('button', { name: 'Log in' });
+        // no label/testid on these inputs, so plain CSS id it is
+        this.usernameInput = page.locator('#loginusername');
+        this.passwordInput = page.locator('#loginpassword');
     }
 
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.loginHeader);
-    }
-
-    async login(username: string, password: string) {
+    async login(username: string, password: string): Promise<void> {
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
         await this.loginButton.click();

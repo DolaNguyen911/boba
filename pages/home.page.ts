@@ -1,36 +1,33 @@
-import {Page, Locator} from '@playwright/test';
-import { BasePage } from './base.page';
+import { Page, Locator } from '@playwright/test';
 import { NavigationBarModule } from './modules/navigationBar.module';
 
-export class HomePage extends BasePage {
-    static readonly PRODUCT_TITLE = '//h4[@class="card-title"]';
-    static readonly PRODUCT_PRICE = "//h5";
+export class HomePage {
+    readonly page: Page;
 
-    // Modules
-    navigationBar: NavigationBarModule = new NavigationBarModule(this.page);
+    navigationBar: NavigationBarModule;
 
-    //Element locators
-    productTable: Locator = this.page.locator('#tbodyid');
-    productList: Locator = this.page.locator('#tbodyid > div');
+    // #tbodyid is reused on cart.html too, so scope to the card divs (cart rows are <tr>)
+    productList: Locator;
 
     constructor(page: Page) {
-        super(page);
+        this.page = page;
+        this.navigationBar = new NavigationBarModule(page);
+        this.productList = page.locator('#tbodyid > div');
     }
 
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.productTable);
+    private productItem(index: number): Locator {
+        return this.productList.nth(index);
     }
 
     async getProductInfomationByIndex(index: number): Promise<{ title: string; price: string }> {
-        const productItem =  this.productList.nth(index)
+        const item = this.productItem(index);
         return {
-            title: await productItem.locator(HomePage.PRODUCT_TITLE).innerText(),
-            price: await productItem.locator(HomePage.PRODUCT_PRICE).innerText()
-        }
+            title: await item.getByRole('heading', { level: 4 }).innerText(),
+            price: await item.getByRole('heading', { level: 5 }).innerText(),
+        };
     }
 
     async clickOnProductByIndex(index: number): Promise<void> {
-        await this.productList.nth(index).locator(HomePage.PRODUCT_TITLE).click()
+        await this.productItem(index).getByRole('heading', { level: 4 }).getByRole('link').click();
     }
-    
 }

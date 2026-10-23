@@ -1,22 +1,20 @@
-import {Page, Locator} from '@playwright/test';
-import { BasePage } from './base.page';
+import { Page, Locator } from '@playwright/test';
 import { NavigationBarModule } from './modules/navigationBar.module';
 
-export class ProductDetailPage extends BasePage {
+export class ProductDetailPage {
+    readonly page: Page;
 
-    // Modules
-    navigationBar: NavigationBarModule = new NavigationBarModule(this.page);
+    navigationBar: NavigationBarModule;
 
-    //Element locators
-    productTitle: Locator = this.page.locator('h2[class="name"]');
-    productPrice: Locator = this.page.locator('h3[class="price-container"]');
-    addToCartButton: Locator = this.page.locator('//a[.="Add to cart"]');
+    productTitle: Locator;
+    productPrice: Locator;
+    addToCartButton: Locator;
 
     constructor(page: Page) {
-        super(page);
-    }
-
-    async is_loaded(): Promise<boolean> {
-        return await this.isElementDisplayed(this.productTitle);
+        this.page = page;
+        this.navigationBar = new NavigationBarModule(page);
+        this.productTitle = page.getByRole('heading', { level: 2 });
+        this.productPrice = page.getByRole('heading', { level: 3 });
+        this.addToCartButton = page.getByRole('link', { name: 'Add to cart' });
     }
 }
