@@ -11,13 +11,15 @@ The framework follows a modular folder hierarchy to ensure a clean separation of
 ```text
 boba/
 ├── .github/workflows/   # CI/CD pipeline configurations
-├── config/              # Environment and global settings
+├── config/              # Environment settings and the fixed test-account pool
+├── fixtures/            # Custom Playwright fixtures (page objects, worker auth)
 ├── pages/               # Page Object Model (POM) implementations
-│   └── modules/         # Reusable UI components (Navigation Bar,...)
+│   ├── modules/         # Reusable UI components (Navigation Bar,...)
+│   └── modals/          # Modal page objects (Login, Place Order, Purchase Success)
 ├── tests/               # Test suites
 │   ├── api/             # Functional API tests
 │   └── ui/              # End-to-end UI tests
-├── utils/               # Common utility and helper functions
+├── utils/               # Common utility and helper functions (e.g. dialog handling)
 ├── .gitignore           # Git exclusion rules
 ├── package.json         # Project dependencies and scripts
 └── playwright.config.ts # Global Playwright configuration
@@ -27,6 +29,7 @@ boba/
 * **Hybrid Testing Strategy:** Unified automation for UI and API validation within a single repository.
 * **Modular Page Objects:** Component-based architecture using modules for highly reusable UI elements.
 * **Data-Driven Testing:** Support for multiple test scenarios by decoupling test data from execution logic.
+* **Parallel-Safe Account State:** Fixed account pool, one per worker — logged in once (fixture setup) and cleaned up per test (fixture teardown), so workers never collide.
 * **Cross-Platform Emulation:** Built-in configuration for testing across desktop browsers and mobile viewports.
 * **Automated CI/CD:** Ready-to-use GitHub Actions for continuous integration and automated test execution.
 
@@ -45,6 +48,7 @@ boba/
     ```bash
     npx playwright install
     ```
+3.  **Set up `.env`** (copy `.env.example`): `TEST_ACCOUNT_PASSWORD` must match the password of the fixed pool in `config/testAccounts.ts` (`qa_worker_01/02/03`). Each worker logs into one of these accounts once and reuses that session; `workers` in `playwright.config.ts` is capped to the pool size (3) so workers never share an account.
 
 ### Execution
 * **Run all tests:** `npm run test`

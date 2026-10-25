@@ -26,7 +26,9 @@ jobs:
       run: npx playwright install --with-deps
     
     - name: Run Playwright tests
-      run: npm run test
+      run: npx playwright test
+      env:
+        TEST_ACCOUNT_PASSWORD: ${{ secrets.TEST_ACCOUNT_PASSWORD }}
     
     - name: Upload test results
       uses: actions/upload-artifact@v4
