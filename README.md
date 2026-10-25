@@ -19,7 +19,7 @@ boba/
 ├── tests/               # Test suites
 │   ├── api/             # Functional API tests
 │   └── ui/              # End-to-end UI tests
-├── utils/               # Common utility and helper functions (e.g. dialog handling)
+├── utils/               # Common utility and helper functions (API login, dialog handling)
 ├── .gitignore           # Git exclusion rules
 ├── package.json         # Project dependencies and scripts
 └── playwright.config.ts # Global Playwright configuration
@@ -36,7 +36,7 @@ boba/
 ## Getting Started
 
 ### Prerequisites
-* **Node.js** (v18 or higher)
+* **Node.js** (v20, matching CI)
 * **npm**
 
 ### Installation
